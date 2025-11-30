@@ -1,16 +1,38 @@
 enum UserRole {
-    PATIENT
-    DOCTOR
-    ADMIN
+  USER
+  HOST
+  ADMIN
 }
 
 enum UserStatus {
-    ACTIVE
-    INACTIVE
-    DELETED
+  ACTIVE      
+  SUSPENDED   
+  DELETED     
+  BANNED      
 }
 
-enum Gender {
-    MALE
-    FEMALE
+
+enum AdminAction {
+  // User management
+  SUSPEND_USER
+  ACTIVATE_USER
+  VERIFY_HOST
+
+  // Event management
+  DELETE_EVENT
+  CANCEL_EVENT
+  COMPLETE_EVENT
+
+  // Payment management
+  REFUND_PAYMENT
+
+  // Review management
+  DELETE_REVIEW
+
+  // Badge management
+  AWARD_BADGE
+
+  // General platform admin
+  SEND_NOTIFICATION
+  BAN_USER
 }
