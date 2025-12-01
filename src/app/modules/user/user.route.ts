@@ -7,7 +7,11 @@ import { UserValidation } from './user.validation';
 const router = express.Router()
 
 
-
+// Get all users (only ADMIN can access)
+router.get(
+    "/",
+    UserController.getAllFromDB
+);
 
 
 // Public user registration
