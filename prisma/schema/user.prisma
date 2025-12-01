@@ -1,18 +1,21 @@
 model User {
-    id           Int        @id @default(autoincrement())
-    fullName     String
-    email        String
-    passwordHash String
-    role         UserRole       @default(USER)
-    userStatus   UserStatus     @default(ACTIVE)
-    bio          String?
-    interests    String[]
-    location     String?
-    profileImage String?
-    createdAt    DateTime   @default(now())
-    updatedAt    DateTime   @updatedAt
-    host         Host?
-    adminLogs    AdminLog[]
+    id            Int        @id @default(autoincrement())
+    fullName      String
+    email         String
+    password      String
+    needPasswordChange Boolean    @default(true)
+    role          UserRole 
+    userStatus    UserStatus @default(ACTIVE)
+    bio           String?
+    interests     String[]
+    location      String?
+    profilePhoto  String?
+    contactNumber String?
+    address       String?
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+    host          Host?
+    adminLogs     AdminLog[]
 
     @@map("users")
 }
@@ -31,13 +34,13 @@ model Host {
 }
 
 model AdminLog {
-    id         Int      @id @default(autoincrement())
+    id         Int         @id @default(autoincrement())
     adminId    Int
     action     AdminAction
     targetId   Int? // e.g., userId or eventId
     targetType String? // e.g., "USER", "EVENT"
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
 
     admin User @relation(fields: [adminId], references: [id])
 
