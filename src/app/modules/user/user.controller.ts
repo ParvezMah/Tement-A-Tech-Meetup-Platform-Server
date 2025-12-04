@@ -4,6 +4,7 @@ import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { UserService } from "./user.service";
 import pick from "../../helpers/pick";
+import { userFilterableFields } from "./user.constant";
 
 
 
@@ -43,16 +44,17 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     // const {page, limit, searchTerm, sortBy, sortOrder, role, status} = req.query;
 
-    const filters = pick(req.query, ["status", "role", "email", "searchTerm"]) // searching , filtering
+    const filters = pick(req.query, userFilterableFields) // searching , filtering
     const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]) // pagination and sorting
 
-    const users = await UserService.getAllFromDB(filters, options);
+    const result = await UserService.getAllFromDB(filters, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: "Users data fetched successfully!",
-        data: users
+        meta: result.meta,
+        data: result.data
     });
 });
 

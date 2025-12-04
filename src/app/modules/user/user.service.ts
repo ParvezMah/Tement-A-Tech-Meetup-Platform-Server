@@ -152,6 +152,12 @@ const getAllFromDB = async (params: any, options: any) => {
 
     console.log(andConditions)
 
+    
+    const whereConditions: Prisma.UserWhereInput = andConditions.length > 0 ? {
+        AND: andConditions
+    } : {}
+
+
     const result = await prisma.user.findMany({
         // Pagination
         skip, 
@@ -166,7 +172,18 @@ const getAllFromDB = async (params: any, options: any) => {
         }
     });
 
-    return result
+    const total = await prisma.user.count({
+        where: whereConditions
+    });
+
+    return {
+        meta: {
+            page,
+            limit,
+            total
+        },
+        data: result
+    };
 }
 
 // Get single user by ID
