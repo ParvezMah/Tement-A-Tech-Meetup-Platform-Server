@@ -33,5 +33,16 @@ router.post(
     }
 );
 
+// Admin creation route (only SUPER_ADMIN or ADMIN can create)
+router.post(
+  "/create-admin",
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createAdmin.parse(JSON.parse(req.body.data));
+    return UserController.createAdmin(req, res, next);
+  }
+);
+
+
 
 export const UserRoutes = router

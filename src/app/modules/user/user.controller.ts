@@ -28,6 +28,16 @@ const createHost = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.createAdmin(req);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Admin created successfully!",
+    data: result
+  });
+});
+
 // Fetch all users (simple)
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     const users = await UserService.getAllFromDB();
@@ -43,7 +53,8 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 
 
 export const UserController = {
-    createUser,
-    createHost,
-    getAllFromDB
+  createUser,
+  createHost,
+  createAdmin,
+  getAllFromDB
 };

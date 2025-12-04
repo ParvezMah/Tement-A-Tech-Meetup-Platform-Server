@@ -1,9 +1,10 @@
-import { UserRole } from "@prisma/client";
+
 import bcrypt from "bcryptjs";
 import config from "../../../config";
 import prisma from "../../shared/prisma";
 import { Request } from "express";
 import { fileUploader } from "../../helpers/fileUploader";
+import { AdminAction, UserRole } from "@prisma/client";
 
 
 
@@ -77,6 +78,50 @@ export const createHost = async (req: Request) => {
 };
 
 
+export const createAdmin = async (req: Request) => {
+  // Upload profile photo if file exists
+  if (req.file) {
+    const uploadedImage = await fileUploader.uploadToCloudinary(req.file);
+    req.body.admin.profilePhoto = uploadedImage?.secure_url;
+  }
+
+  // Hash password
+  const hashPassword = await bcrypt.hash(req.body.password, Number(config.salt_round));
+
+  // Transaction: create User and Admin together
+  const result = await prisma.$transaction(async (tx) => {
+    // Create User
+    const createdUser = await tx.user.create({
+      data: {
+        name: req.body.admin.name,
+        email: req.body.admin.email,
+        password: hashPassword,
+        role: UserRole.ADMIN,
+        needPasswordChange: false,
+        profilePhoto: req.body.admin.profilePhoto || null,
+      },
+    });
+
+    // Create Admin log (optional: depends if you want separate table or not)
+    const createdAdmin = await tx.adminLog.create({
+      data: {
+        name: req.body.admin.name,
+        email: req.body.admin.email,
+        profilePhoto: req.body.admin.profilePhoto || null,
+        contactNumber: req.body.admin.contactNumber || null,
+        adminId: createdUser.id,
+        action: AdminAction.CREATE_USER, // Or your AdminAction enum
+      },
+    });
+
+    return { user: createdUser, adminLog: createdAdmin };
+  });
+
+  return result;
+};
+
+
+
 const getAllFromDB = async () => {
     const users = await prisma.user.findMany({
         select: {
@@ -100,5 +145,6 @@ const getAllFromDB = async () => {
 export const UserService = {
   createUser,
   createHost,
+  createAdmin,
   getAllFromDB
 };

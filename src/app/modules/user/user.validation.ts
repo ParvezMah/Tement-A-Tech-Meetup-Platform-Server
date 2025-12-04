@@ -32,7 +32,19 @@ export const createHost = z.object({
   }),
 });
 
+export const createAdmin = z.object({
+  password: z.string({ error: "Password is required" }),
+  admin: z.object({
+    name: z.string({ error: "Name is required!" }),
+    email: z.string({ error: "Email is required!" }),
+    contactNumber: z.string().optional(),
+    address: z.string({ error: "Address is required!" }),
+    profilePhoto: z.string().url().optional(),
+  }),
+});
+
 export const UserValidation = {
-    createUser,
-    createHost
+  createUser,
+  createHost,
+  createAdmin
 };
