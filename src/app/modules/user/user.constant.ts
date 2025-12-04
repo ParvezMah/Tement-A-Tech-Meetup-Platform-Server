@@ -1,11 +1,11 @@
 export const userFilterableFields = [
-    'fullName',
+    'name',
     'email',
     'role',
     'status'
 ];
 
 export const userSearchAbleFields = [
-    'fullName',
+    'name',
     'email'
 ];

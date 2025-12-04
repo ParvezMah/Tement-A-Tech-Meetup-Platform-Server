@@ -8,7 +8,7 @@ const login = async (payload: { email: string, password: string }) => {
     const user = await prisma.user.findFirstOrThrow({
         where: {
             email: payload.email,
-            userStatus: UserStatus.ACTIVE
+            userStatus: UserStatus.ACTIVE 
         }
     })
 

@@ -24,5 +24,14 @@ router.post(
     }
 );
 
+router.post(
+    "/create-host", // Only Admin can create host
+    fileUploader.upload.single("file"),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = UserValidation.createHost.parse(JSON.parse(req.body.data));
+        return UserController.createHost(req, res, next);
+    }
+);
+
 
 export const UserRoutes = router

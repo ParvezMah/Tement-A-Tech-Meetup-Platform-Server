@@ -1,48 +1,56 @@
 model User {
-    id            Int        @id @default(autoincrement())
-    fullName      String
-    email         String
-    password      String
+    id                 Int        @id @default(autoincrement())
+    name               String
+    email              String
+    password           String
+    role               UserRole
     needPasswordChange Boolean    @default(true)
-    role          UserRole 
-    userStatus    UserStatus @default(ACTIVE)
-    bio           String?
-    interests     String[]
-    location      String?
-    profilePhoto  String?
-    contactNumber String?
-    address       String?
-    createdAt     DateTime   @default(now())
-    updatedAt     DateTime   @updatedAt
-    host          Host?
-    adminLogs     AdminLog[]
+    userStatus         UserStatus @default(ACTIVE)
+    bio                String?
+    interests          String[]
+    location           String?
+    profilePhoto       String?
+    contactNumber      String?
+    address            String?
+    createdAt          DateTime   @default(now())
+    updatedAt          DateTime   @updatedAt
+    host               Host?
+    adminLogs          AdminLog[]
 
     @@map("users")
 }
 
 model Host {
-    id        Int      @id @default(autoincrement())
-    userId    Int      @unique
-    user      User     @relation(fields: [userId], references: [id])
-    verified  Boolean  @default(false)
-    rating    Float?
-    bio       String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id            Int      @id @default(autoincrement())
+    name          String
+    email         String   @unique
+    profilePhoto  String?
+    contactNumber String
+    address       String
+    userId        Int      @unique
+    user          User     @relation(fields: [userId], references: [id])
+    verified      Boolean  @default(false)
+    rating        Float?
+    bio           String?
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 
     @@map("hosts")
 }
 
 model AdminLog {
-    id         Int         @id @default(autoincrement())
-    adminId    Int
-    action     AdminAction
-    targetId   Int? // e.g., userId or eventId
-    targetType String? // e.g., "USER", "EVENT"
-    createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
-
-    admin User @relation(fields: [adminId], references: [id])
+    id            Int         @id @default(autoincrement())
+    name          String
+    email         String
+    profilePhoto  String?
+    contactNumber String?
+    adminId       Int
+    action        AdminAction
+    targetId      Int? // e.g., userId or eventId
+    targetType    String? // e.g., "USER", "EVENT"
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    admin         User        @relation(fields: [adminId], references: [id])
 
     @@map("adminLogs")
 }
