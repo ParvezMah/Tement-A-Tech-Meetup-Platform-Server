@@ -31,6 +31,33 @@ const login = async (payload: { email: string, password: string }) => {
     }
 }
 
+
+const getMe = async (userSesstion: any) => {
+    const email = userSesstion.email;
+    const user = await prisma.user.findFirst({
+        where: {
+            email: email,
+        },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            createdAt: true,
+            updatedAt: true,
+        }
+    });
+
+    if (!user) {
+        throw new Error("User not found!");
+    }
+
+    return user;
+};
+
+
 export const AuthService = {
-    login
+    login,
+    getMe
 }
