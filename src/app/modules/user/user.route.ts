@@ -13,6 +13,10 @@ router.get(
     UserController.getAllFromDB
 );
 
+// Get single user
+router.get("/:id", (req: Request, res: Response, next: NextFunction) => {
+  return UserController.getSingleUser(req, res, next);
+});
 
 // Public user registration
 router.post(

@@ -77,7 +77,6 @@ export const createHost = async (req: Request) => {
   return result;
 };
 
-
 export const createAdmin = async (req: Request) => {
   // Upload profile photo if file exists
   if (req.file) {
@@ -120,8 +119,6 @@ export const createAdmin = async (req: Request) => {
   return result;
 };
 
-
-
 const getAllFromDB = async () => {
     const users = await prisma.user.findMany({
         select: {
@@ -139,12 +136,34 @@ const getAllFromDB = async () => {
     return users;
 };
 
+// Get single user by ID
+const getSingleUser = async (userId: number) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      userStatus: true,
+      profilePhoto: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
 
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+};
 
 
 export const UserService = {
   createUser,
   createHost,
   createAdmin,
-  getAllFromDB
+  getAllFromDB,
+  getSingleUser
 };
