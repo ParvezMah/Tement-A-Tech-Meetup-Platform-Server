@@ -159,11 +159,31 @@ const getSingleUser = async (userId: number) => {
   return user;
 };
 
+// Delete user by ID
+const deleteUser = async (userId : number) => {
+  // Check if user exists
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Delete user
+  const deletedUser = await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  return deletedUser;
+};
+
 
 export const UserService = {
   createUser,
   createHost,
   createAdmin,
   getAllFromDB,
-  getSingleUser
+  getSingleUser,
+  deleteUser
 };

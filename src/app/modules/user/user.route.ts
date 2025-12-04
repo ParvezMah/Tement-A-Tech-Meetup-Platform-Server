@@ -47,6 +47,11 @@ router.post(
   }
 );
 
+// Delete user
+router.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
+  return UserController.deleteUser(req, res, next);
+});
+
 
 
 export const UserRoutes = router
