@@ -40,12 +40,12 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 
 // Fetch all users (simple)
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
-    // const {page, limit} = req.query;
+    const {page, limit, searchTerm, sortBy, sortOrder} = req.query;
 
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
+    // const page = Number(req.query.page) || 1;
+    // const limit = Number(req.query.limit) || 10;
 
-    const users = await UserService.getAllFromDB({page:Number(page), limit: Number(limit)});
+    const users = await UserService.getAllFromDB({page:Number(page), limit: Number(limit), searchTerm, sortBy, sortOrder});
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
