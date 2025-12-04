@@ -119,21 +119,11 @@ export const createAdmin = async (req: Request) => {
   return result;
 };
 
-const getAllFromDB = async () => {
-    const users = await prisma.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-            userStatus: true,
-            profilePhoto: true, // postman e profilePhoto astese, so lal batti joluk
-            createdAt: true,
-            updatedAt: true
-        }
-    });
+const getAllFromDB = async ({page, limit}: {page:number, limit:number}) => {
+    const skip = (page-1)*limit;
+    const result = await prisma.user.findMany({skip, take: limit});
 
-    return users;
+    return result;
 };
 
 // Get single user by ID
