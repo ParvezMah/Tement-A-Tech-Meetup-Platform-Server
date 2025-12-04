@@ -119,32 +119,36 @@ export const createAdmin = async (req: Request) => {
   return result;
 };
 
-const getAllFromDB = async ({page, limit, searchTerm, sortBy, sortOrder, role, status}: {page:number, limit:number, searchTerm: any, sortBy: any, sortOrder: any, role: any, status: any}) => {
-    const pageNumber = page || 1;
-    const limitNumber = limit || 10;
+const getAllFromDB = async (params: any, options: any) => {
+    const pageNumber = options.page || 1;
+    const limitNumber = options.limit || 10;
     const skip = (pageNumber-1)*limitNumber;
     const result = await prisma.user.findMany({
-      skip, 
-      take: limitNumber,
-      where : {
-        email : {
-            contains: searchTerm,
-            mode: "insensitive",
+        // Pagination
+        skip, 
+        take: limitNumber,
+        // Search
+        where : {
+            email : {
+                contains: searchTerm,
+                mode: "insensitive",
             },
+        // filtering
             role : role,
-            userStatus: status
-      },
-      orderBy: sortBy && sortOrder 
-      ? {
-          [sortBy]: sortOrder
+            status: status
+        },
+        // Sorting
+        orderBy: sortBy && sortOrder 
+        ? {
+            [sortBy]: sortOrder
         }
-      : {
-          createdAt: 'desc',
+        : {
+            createdAt: 'desc',
         },
     });
 
-    return result;
-};
+    return result
+}
 
 // Get single user by ID
 const getSingleUser = async (userId: number) => {

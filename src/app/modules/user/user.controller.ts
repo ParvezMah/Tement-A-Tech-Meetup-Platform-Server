@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { UserService } from "./user.service";
+import pick from "../../helpers/pick";
 
 
 
@@ -40,12 +41,12 @@ const createAdmin = catchAsync(async (req: Request, res: Response) => {
 
 // Fetch all users (simple)
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
-    const {page, limit, searchTerm, sortBy, sortOrder, role, status} = req.query;
+    // const {page, limit, searchTerm, sortBy, sortOrder, role, status} = req.query;
 
-    // const page = Number(req.query.page) || 1;
-    // const limit = Number(req.query.limit) || 10;
+    const filters = pick(req.query, ["status", "role", "email"]) // searching , filtering
+    const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]) // pagination and sorting
 
-    const users = await UserService.getAllFromDB({page:Number(page), limit: Number(limit), searchTerm, sortBy, sortOrder, role, status});
+    const users = await UserService.getAllFromDB(filters, options);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
